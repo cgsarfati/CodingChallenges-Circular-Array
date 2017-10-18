@@ -113,7 +113,7 @@ class CircularArray(object):
         # if initially empty
         if self.head is None:
             self.head = 0
-            self.array[item]
+            self.array = [item]
 
         # if not empty, insert item before .head + reassign head (since shifted)
         else:
@@ -121,7 +121,15 @@ class CircularArray(object):
             self.head += 1
 
     def get_by_index(self, index):
-        """Return the data at a particular index."""
+        """Return the data at a particular index.
+
+        No circling (get @2):
+        [A B C D] where head @B, target is D
+        --> array[1 + 2] --> array[3] --> D
+
+        Circling (get @2)
+        [A B C D] where head @D, target is B
+        --> new index is 2 + 3 - 4 --> 1 --> array[1] --> B"""
 
         # Consideration: use head as starting index + add on; don't use
         # regular indexing of list!
@@ -130,7 +138,7 @@ class CircularArray(object):
         if index >= len(self.array):
             return None
 
-        # If head positioned where target index doesn't require circling
+        # If head positioned where target index doesn't circle around
         if index + self.head < len(self.array):
             return self.array[index + self.head]
 
@@ -144,8 +152,22 @@ class CircularArray(object):
         If increment is greater than list length, keep going around.
         """
 
+        # Consideration: just change .head, not actual array.
+
+        # Edge: empty array
+        if not self.head:
+            return
+
+        # Circular rotation
+        adjusted_idx = (increment + self.head) % len(self.array)
+        self.head = adjusted_idx
+
     def print_array(self):
         """Print the circular array items in order, one per line"""
+
+        # use get_by_index for .head indexing vs. original list index
+        for i in range(len(self.array)):
+            print self.get_by_index(i)
 
 
 if __name__ == "__main__":
