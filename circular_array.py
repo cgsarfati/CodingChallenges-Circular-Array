@@ -150,6 +150,18 @@ class CircularArray(object):
         """Rotate array, positive for right, negative for left.
 
         If increment is greater than list length, keep going around.
+
+        Ex:
+        [A, B, C, D] (head @D)
+        rotate(1) --> make head @A
+        rotate(2) --> make head @B
+        rotate(3) --> make head @C
+        rotate(4) --> make head @D
+        rotate(5) --> make head @A
+
+        Soln:
+        rotate(1) --> (1 + 3) % 4 = 0; self.head now 0 --> array[0] --> A
+        rotate(5) --> (5 + 3) % 4 = 0; self.head now 0 --> array[0] --> A
         """
 
         # Consideration: just change .head, not actual array.
@@ -158,7 +170,7 @@ class CircularArray(object):
         if not self.head:
             return
 
-        # Circular rotation
+        # Reassign head by adjusting idx; use modulo for circular rotation
         adjusted_idx = (increment + self.head) % len(self.array)
         self.head = adjusted_idx
 
