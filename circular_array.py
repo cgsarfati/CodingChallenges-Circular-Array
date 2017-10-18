@@ -102,15 +102,41 @@ class CircularArray(object):
         self.head = None
 
     def add_item(self, item):
-        """Add item to array, at the end of the current rotation."""
+        """Add item to array, at the end of the current rotation.
+
+        if head @ A, insert E.
+        [A B C] --> [E A B C] (E now head) --> +=1 head --> [E A B C] (A back to head)
+
+        if rotated 1 & head now @ B, insert E.
+        [A B C] --> [A E B C] (E now head) --> +=1 head --> [A E B C] (B back to head)"""
 
         # if initially empty
         if self.head is None:
             self.head = 0
             self.array[item]
 
+        # if not empty, insert item before .head + reassign head (since shifted)
+        else:
+            self.array.insert(self.head, item)
+            self.head += 1
+
     def get_by_index(self, index):
         """Return the data at a particular index."""
+
+        # Consideration: use head as starting index + add on; don't use
+        # regular indexing of list!
+
+        # Edge case: if index doesn't exist
+        if index >= len(self.array):
+            return None
+
+        # If head positioned where target index doesn't require circling
+        if index + self.head < len(self.array):
+            return self.array[index + self.head]
+
+        # If circling needed
+        adjusted_idx = index + self.head - len(self.array)
+        return self.array[adjusted_idx]
 
     def rotate(self, increment):
         """Rotate array, positive for right, negative for left.
